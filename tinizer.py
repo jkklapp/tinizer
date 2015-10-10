@@ -3,6 +3,8 @@ from flask import Flask, request, session, url_for, redirect, \
 
 import pickledb as db
 
+from floo import Floo
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -28,13 +30,23 @@ def tinize():
     db.set("next_url", get_next_url(tiny_url))
     return render_template('index.html', tinized_url=tiny_url)
 
+@app.route("/<tiny_url>")
+def untinize(tiny_url):
+    original_url = db.get(tiny_url)
+    if not original_url:
+        return render_template('404.html'), 404
+    else:
+        return redirect(original_url, code=302)
+
 def get_first_url():
-    return 0
+    return counter.initial()
 
 def get_next_url(current_url):
-    return current_url + 1
+    return counter.inc(current_url)
 
 if __name__ == "__main__":
+    # Characters valid of a shor URL
+    counter = Floo("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=")
     db = db.load('tinize.db', True)
     n_urls = db.get("next_url")
     if not n_urls:
