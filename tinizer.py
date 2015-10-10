@@ -5,6 +5,8 @@ import pickledb as db
 
 from floo import Floo
 
+from urlparse import urlparse
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -25,10 +27,15 @@ def tinize():
     """Reads from the request de original URL and generates the
     tiny url for it. Stores the data in the DB.
     """
+    original_url = request.form["original_url"]
+    parsed_url = urlparse(original_url)
+    is_valid_url = bool(parsed_url.scheme)
+    if not is_valid_url:
+        return render_template('400.html'), 400
     tiny_url = db.get("next_url")
-    db.set(tiny_url, request.form["original_url"])
+    db.set(tiny_url, original_url)
     db.set("next_url", get_next_url(tiny_url))
-    return render_template('index.html', tinized_url=tiny_url)
+    return render_template('index.html', tinized_url=urlize(tiny_url))
 
 @app.route("/<tiny_url>")
 def untinize(tiny_url):
@@ -43,6 +50,9 @@ def get_first_url():
 
 def get_next_url(current_url):
     return counter.inc(current_url)
+
+def urlize(url):
+    return request.url_root + url
 
 if __name__ == "__main__":
     # Characters valid of a shor URL

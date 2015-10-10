@@ -1,15 +1,15 @@
 <!doctype html>
-<title>{% block title %}Welcome{% endblock %} | MiniTwit</title>
+<title>tinizer</title>
+<link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='input.css') }}">
+<div class="navigation">
+  <a href="{{ url_for('about') }}">?</a>
+</div>
+  <h1>tinizer</h1>
 <div class="page">
-  <h1>MiniTwit</h1>
-  <div class="navigation">
-    <a href="{{ url_for('about') }}">About</a>
-  </div>
+
   <div class="body">
   {% block body %}{% endblock %}
-  </div>
-  <div class="footer">
-    Tinizer &mdash; A Flask Application
   </div>
 </div>

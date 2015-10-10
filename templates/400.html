@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% block title %}URL NOT FOUND{% endblock %}
+{% block body %}
+  <h2>Bad Request</h2>
+  <div class="tiny-url-container">You entered an invalid URL. <a href="{{ url_for('index') }}">Try again.</a></div>
+{% endblock %}
